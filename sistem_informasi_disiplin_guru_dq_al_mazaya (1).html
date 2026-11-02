@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SI-DISIPLIN GURU | DQ Al Mazaya</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
+
+    <!-- APP CONTAINER -->
+    <div id="app" class="flex-grow flex flex-col">
+        
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen" class="flex-grow flex items-center justify-center p-4 bg-gradient-to-br from-brand-900 via-brand-800 to-emerald-950">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-emerald-100">
+                <div class="p-8 text-center bg-gradient-to-r from-brand-700 to-brand-600 text-white relative">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg border-4 border-emerald-200 text-brand-700">
+                        <i class="fa-solid me-0.5 fa-user-shield text-3xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold tracking-tight">DQ AL MAZAYA</h1>
+                    <p class="text-xs text-emerald-100 mt-1 uppercase tracking-wider">Sistem Informasi Disiplin Guru</p>
+                </div>
+
+                <form id="loginForm" onsubmit="handleLogin(event)" class="p-8 space-y-5">
+                    <div id="loginAlert" class="hidden p-3 bg-red-50 text-red-700 border border-red-200 rounded-lg text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation text-red-500"></i>
+                        <span id="loginAlertMsg">Username atau password salah!</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Username Operator</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="loginUsername" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none transition" placeholder="Masukkan username">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-2">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                            <input type="password" id="loginPassword" required class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm outline-none transition" placeholder="Masukkan password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> Masuk Sistem
+                    </button>
+
+                    <div class="text-center mt-4">
+                        <p class="text-xs text-gray-400">Default Login: <span class="font-mono bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">admin / admin123</span></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAIN DASHBOARD SYSTEM (Hidden initially) -->
+        <div id="mainDashboard" class="hidden flex-grow flex flex-col md:flex-row min-h-screen">
+            
+            <!-- SIDEBAR -->
+            <aside class="w-full md:w-64 bg-brand-900 text-white flex flex-col justify-between flex-shrink-0 shadow-xl">
+                <div>
+                    <!-- Header Sidebar -->
+                    <div class="p-5 border-b border-brand-800 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-brand-600 rounded-lg flex items-center justify-center font-bold text-xl text-white shadow">
+                            DQ
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-sm tracking-wide leading-tight">DQ AL MAZAYA</h2>
+                            <p class="text-xs text-brand-300">Kedisiplinan Guru</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <nav class="p-4 space-y-1.5 text-sm">
+                        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium text-brand-100 hover:bg-brand-800">
+                            <i class="fa-solid fa-chart-pie w-5"></i> Dashboard & Ringkasan
+                        </button>
+                        <button onclick="switchTab('guru')" id="nav-guru" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium text-brand-100 hover:bg-brand-800">
+                            <i class="fa-solid fa-chalkboard-user w-5"></i> Data Guru
+                        </button>
+                        <button onclick="switchTab('pelanggaran')" id="nav-pelanggaran" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium text-brand-100 hover:bg-brand-800">
+                            <i class="fa-solid fa-triangle-exclamation w-5"></i> Input Pelanggaran
+                        </button>
+                        <button onclick="switchTab('laporan')" id="nav-laporan" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium text-brand-100 hover:bg-brand-800">
+                            <i class="fa-solid fa-file-lines w-5"></i> Rekap & Laporan
+                        </button>
+                        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg transition font-medium text-brand-100 hover:bg-brand-800">
+                            <i class="fa-solid fa-gear w-5"></i> Akun Operator
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Footer Sidebar / Profile -->
+                <div class="p-4 border-t border-brand-800 bg-brand-950/40">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2.5 overflow-hidden">
+                            <div class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold text-white">
+                                OP
+                            </div>
+                            <div class="truncate">
+                                <p id="sidebarUsername" class="text-xs font-semibold text-white truncate">Operator</p>
+                                <p class="text-[10px] text-brand-300">Administrator</p>
+                            </div>
+                        </div>
+                        <button onclick="handleLogout()" title="Keluar" class="text-red-300 hover:text-red-100 p-2 rounded-lg hover:bg-red-900/40 transition">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-grow bg-gray-50 flex flex-col min-w-0">
+                
+                <!-- TOP HEADER -->
+                <header class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+                    <div>
+                        <h1 id="pageTitle" class="text-xl font-bold text-gray-800">Dashboard Utama</h1>
+                        <p id="pageSubtitle" class="text-xs text-gray-500">Ringkasan kedisiplinan dan aktivitas guru DQ Al Mazaya</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <!-- Backup / Restore Button Quick Actions -->
+                        <button onclick="exportAllDatabase()" class="hidden md:flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs px-3 py-2 rounded-lg font-medium border border-emerald-200 transition">
+                            <i class="fa-solid fa-download"></i> Unduh Cadangan JSON
+                        </button>
+                    </div>
+                </header>
+
+                <!-- TAB CONTENT CONTAINER -->
+                <div class="p-4 md:p-6 flex-grow custom-scrollbar overflow-y-auto">
+
+                    <!-- Toast Notification Banner -->
+                    <div id="toast" class="hidden mb-4 p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-md transition-all">
+                        <div class="flex items-center gap-2.5">
+                            <i id="toastIcon" class="fa-solid fa-check-circle text-lg"></i>
+                            <span id="toastMessage">Pesan Notifikasi</span>
+                        </div>
+                        <button onclick="hideToast()" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <!-- 1. DASHBOARD TAB -->
+                    <div id="tab-dashboard-content" class="tab-content space-y-6">
+                        <!-- Stat Cards Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase text-gray-400">Total Guru</p>
+                                    <h3 id="statTotalGuru" class="text-2xl font-bold text-gray-800 mt-1">0</h3>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase text-gray-400">Total Pelanggaran</p>
+                                    <h3 id="statTotalPelanggaran" class="text-2xl font-bold text-gray-800 mt-1">0</h3>
+                                </div>
+                                <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase text-gray-400">Pelanggaran Berat</p>
+                                    <h3 id="statPelanggaranBerat" class="text-2xl font-bold text-red-600 mt-1">0</h3>
+                                </div>
+                                <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-semibold uppercase text-gray-400">Bulan Ini</p>
+                                    <h3 id="statBulanIni" class="text-2xl font-bold text-brand-600 mt-1">0</h3>
+                                </div>
+                                <div class="w-12 h-12 bg-emerald-50 text-brand-600 rounded-xl flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-calendar-day"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Violations Table -->
+                        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                            <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-clock-rotate-left text-brand-600"></i> Pelanggaran Terbaru
+                                </h3>
+                                <button onclick="switchTab('laporan')" class="text-xs text-brand-600 font-semibold hover:underline">Lihat Semua Laporan →</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm text-gray-600">
+                                    <thead class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
+                                        <tr>
+                                            <th class="px-5 py-3">Tanggal</th>
+                                            <th class="px-5 py-3">Nama Guru</th>
+                                            <th class="px-5 py-3">Jenis Pelanggaran</th>
+                                            <th class="px-5 py-3">Tingkat</th>
+                                            <th class="px-5 py-3">Tindakan</th>
+                                            <th class="px-5 py-3 text-center">Aksi WA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableDashboardRecent" class="divide-y divide-gray-100">
+                                        <!-- Dynamic Content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. DATA GURU TAB -->
+                    <div id="tab-guru-content" class="tab-content hidden space-y-6">
+                        <!-- Action Bar & Add Form -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Form Add / Edit Guru -->
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-fit">
+                                <h3 id="formGuruTitle" class="font-bold text-gray-800 border-b border-gray-100 pb-3 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-user-plus text-brand-600"></i> Tambah Data Guru
+                                </h3>
+                                <form id="formGuru" onsubmit="saveGuru(event)" class="space-y-4">
+                                    <input type="hidden" id="guruEditId" value="">
+                                    
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">NIP / ID Guru</label>
+                                        <input type="text" id="guruNip" required class="w-full px-3.5 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Contoh: 19850101...">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Nama Guru Lengkap</label>
+                                        <input type="text" id="guruNama" required class="w-full px-3.5 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Contoh: Ahmad Fauzi, S.Pd">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Bidang Studi / Mengajar</label>
+                                        <input type="text" id="guruBidang" required class="w-full px-3.5 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Contoh: Bahasa Arab / Tahfizh">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">No. WhatsApp</label>
+                                        <input type="tel" id="guruWa" required class="w-full px-3.5 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Contoh: 08123456789">
+                                        <span class="text-[10px] text-gray-400">Gunakan format angka biasa (08... atau 62...)</span>
+                                    </div>
+
+                                    <div class="flex gap-2 pt-2">
+                                        <button type="submit" id="btnSaveGuru" class="flex-grow py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-medium rounded-lg text-sm transition flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-save"></i> Simpan Data Guru
+                                        </button>
+                                        <button type="button" id="btnCancelGuru" onclick="resetFormGuru()" class="hidden px-3 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg text-sm transition">
+                                            Batal
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- List Data Guru -->
+                            <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+                                <div class="p-5 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                    <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                        <i class="fa-solid fa-users text-brand-600"></i> Daftar Guru DQ Al Mazaya
+                                    </h3>
+                                    <div class="flex items-center gap-2">
+                                        <div class="relative">
+                                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 text-xs">
+                                                <i class="fa-solid fa-magnifying-glass"></i>
+                                            </span>
+                                            <input type="text" id="searchGuruInput" onkeyup="renderGuruTable()" class="pl-8 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-500" placeholder="Cari NIP / Nama...">
+                                        </div>
+                                        <button onclick="exportGuruCSV()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs px-3 py-1.5 rounded-lg border border-emerald-200 font-medium transition flex items-center gap-1">
+                                            <i class="fa-solid fa-file-excel"></i> Export CSV
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="overflow-x-auto flex-grow">
+                                    <table class="w-full text-left text-sm text-gray-600">
+                                        <thead class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
+                                            <tr>
+                                                <th class="px-4 py-3 w-12 text-center">No</th>
+                                                <th class="px-4 py-3">NIP</th>
+                                                <th class="px-4 py-3">Nama Guru</th>
+                                                <th class="px-4 py-3">Bidang Studi</th>
+                                                <th class="px-4 py-3">No WA</th>
+                                                <th class="px-4 py-3 text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableGuruBody" class="divide-y divide-gray-100">
+                                            <!-- Dynamic content -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. INPUT PELANGGARAN TAB -->
+                    <div id="tab-pelanggaran-content" class="tab-content hidden max-w-3xl mx-auto">
+                        <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm">
+                            <div class="border-b border-gray-100 pb-4 mb-6">
+                                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Form Catat Pelanggaran Guru
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Input data pelanggaran kedisiplinan guru secara teliti untuk rekam medis kedisiplinan.</p>
+                            </div>
+
+                            <form id="formPelanggaran" onsubmit="savePelanggaran(event)" class="space-y-5">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Tanggal Pelanggaran</label>
+                                        <input type="date" id="pelanggaranTanggal" required class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Pilih Nama Guru</label>
+                                        <select id="pelanggaranGuruId" required class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none bg-white">
+                                            <option value="">-- Pilih Guru --</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Tingkat Pelanggaran</label>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="tingkatPelanggaran" value="Biasa" checked class="peer hidden">
+                                            <div class="p-3 text-center border border-gray-300 rounded-xl peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition font-medium text-sm">
+                                                <i class="fa-solid fa-info-circle block mb-1 text-base text-blue-500"></i>
+                                                Biasa
+                                            </div>
+                                        </label>
+
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="tingkatPelanggaran" value="Sedang" class="peer hidden">
+                                            <div class="p-3 text-center border border-gray-300 rounded-xl peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-700 transition font-medium text-sm">
+                                                <i class="fa-solid fa-triangle-exclamation block mb-1 text-base text-amber-500"></i>
+                                                Sedang
+                                            </div>
+                                        </label>
+
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="tingkatPelanggaran" value="Berat" class="peer hidden">
+                                            <div class="p-3 text-center border border-gray-300 rounded-xl peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 transition font-medium text-sm">
+                                                <i class="fa-solid fa-circle-exclamation block mb-1 text-base text-red-500"></i>
+                                                Berat
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Jenis / Detail Pelanggaran</label>
+                                    <textarea id="pelanggaranJenis" required rows="3" class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Deskripsikan bentuk pelanggaran yang dilakukan (misal: Terlambat masuk kelas 20 menit, Tidak membuat RPP, dll)..."></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Tindakan / Sanksi Yang Harus Dilakukan</label>
+                                    <textarea id="pelanggaranTindakan" required rows="3" class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Tindakan korektif / sanksi yang ditetapkan (misal: Teguran lisan, Pembuatan surat pernyataan, Teguran tertulis SP1)..."></textarea>
+                                </div>
+
+                                <div class="pt-3">
+                                    <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-paper-plane"></i> Simpan Record Pelanggaran
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- 4. LAPORAN & REKAP TAB -->
+                    <div id="tab-laporan-content" class="tab-content hidden space-y-6">
+                        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                            <!-- Filter Section -->
+                            <div class="p-5 border-b border-gray-100 bg-gray-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice text-brand-600"></i> Rekap Pelanggaran Disiplin Guru
+                                </h3>
+
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <!-- Filter Tingkat -->
+                                    <select id="filterTingkat" onchange="renderLaporanTable()" class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none bg-white">
+                                        <option value="ALL">Semua Tingkat</option>
+                                        <option value="Biasa">Biasa</option>
+                                        <option value="Sedang">Sedang</option>
+                                        <option value="Berat">Berat</option>
+                                    </select>
+
+                                    <!-- Filter Tanggal -->
+                                    <input type="date" id="filterTanggalMulai" onchange="renderLaporanTable()" class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none bg-white">
+                                    <span class="text-xs text-gray-400">s/d</span>
+                                    <input type="date" id="filterTanggalSelesai" onchange="renderLaporanTable()" class="px-3 py-1.5 border border-gray-300 rounded-lg text-xs outline-none bg-white">
+
+                                    <button onclick="resetLaporanFilter()" class="text-xs px-2.5 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 font-medium transition" title="Reset Filter">
+                                        <i class="fa-solid fa-rotate-left"></i>
+                                    </button>
+
+                                    <button onclick="exportPelanggaranCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition flex items-center gap-1.5 shadow-sm">
+                                        <i class="fa-solid fa-download"></i> Export Database (CSV)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Table -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-sm text-gray-600">
+                                    <thead class="bg-gray-50 text-xs font-semibold uppercase text-gray-500 border-b border-gray-100">
+                                        <tr>
+                                            <th class="px-4 py-3 w-12 text-center">No</th>
+                                            <th class="px-4 py-3">Tanggal</th>
+                                            <th class="px-4 py-3">Nama Guru</th>
+                                            <th class="px-4 py-3">Bidang Studi</th>
+                                            <th class="px-4 py-3">Jenis Pelanggaran</th>
+                                            <th class="px-4 py-3">Tingkat</th>
+                                            <th class="px-4 py-3">Tindakan / Sanksi</th>
+                                            <th class="px-4 py-3 text-center">Aksi WA</th>
+                                            <th class="px-4 py-3 text-center">Hapus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableLaporanBody" class="divide-y divide-gray-100">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. PENGATURAN OPERATOR TAB -->
+                    <div id="tab-pengaturan-content" class="tab-content hidden max-w-xl mx-auto space-y-6">
+                        <div class="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm">
+                            <div class="border-b border-gray-100 pb-4 mb-6">
+                                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fa-solid fa-user-gear text-brand-600"></i> Pengaturan Akun Operator
+                                </h3>
+                                <p class="text-xs text-gray-500 mt-1">Ubah username dan password operator secara berkala untuk menjaga kerahasiaan sistem.</p>
+                            </div>
+
+                            <form id="formPengaturan" onsubmit="saveOperatorAccount(event)" class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Username Operator Baru</label>
+                                    <input type="text" id="optUsername" required class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Password Baru</label>
+                                    <input type="password" id="optPassword" required class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Masukkan password baru">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Konfirmasi Password Baru</label>
+                                    <input type="password" id="optPasswordConfirm" required class="w-full px-3.5 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 text-sm outline-none" placeholder="Ulangi password baru">
+                                </div>
+
+                                <div class="pt-2">
+                                    <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-key"></i> Perbarui Kredensial Operator
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Restore Database Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-database text-brand-600"></i> Import / Restore Database
+                                </h4>
+                                <p class="text-xs text-gray-500 mb-3">Unggah berkas JSON hasil backup sebelumnya untuk memulihkan seluruh data guru & pelanggaran.</p>
+                                <input type="file" id="importJsonFile" accept=".json" class="block w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-50 file:text-brand-700 hover:file:bg-brand-100 cursor-pointer">
+                                <button onclick="importDatabaseJSON()" class="mt-3 w-full py-2 bg-gray-800 hover:bg-gray-900 text-white text-xs font-semibold rounded-lg transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-upload"></i> Restore Data dari File JSON
+                                </button>
+                            </div>
+
+                            <hr class="border-gray-100">
+
+                            <!-- Reset to Default Sample Data -->
+                            <div>
+                                <h4 class="font-bold text-red-600 text-sm mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-triangle-exclamation"></i> Reset Database ke Sampel Awal
+                                </h4>
+                                <p class="text-xs text-gray-500 mb-3">Tindakan ini akan mengembalikan data guru dan data pelanggaran ke sampel bawaan.</p>
+                                <button onclick="resetToDefaultData()" class="w-full py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-rotate-left"></i> Reset ke Data Sampel Standard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- INITIAL DATA & PERSISTENCE ENGINE ---
+        const DEFAULT_GURU = [
+            { id: "g1", nip: "198804122015031001", nama: "Ustadz Ahmad Fauzi, S.Pd", bidang: "Tahfizh & Al-Qur'an", wa: "081234567890" },
+            { id: "g2", nip: "199008232018012002", nama: "Ustadzah Siti Nurhaliza, M.Pd", bidang: "Bahasa Arab", wa: "082198765432" },
+            { id: "g3", nip: "198505152012041003", nama: "Ustadz Muhammad Ridwan, S.Ag", bidang: "Fiqih & Aqidah", wa: "085712345678" }
+        ];
+
+        const DEFAULT_PELANGGARAN = [
+            {
+                id: "p1",
+                tanggal: new Date().toISOString().split('T')[0],
+                guruId: "g1",
+                jenis: "Terlambat masuk kelas pembelajaran Tahfizh selama 25 menit tanpa keterangan.",
+                tingkat: "Biasa",
+                tindakan: "Teguran lisan dari Bagian Kedisiplinan & pemotongan kompensasi waktu."
+            }
+        ];
+
+        // Safe loader for LocalStorage - strictly preserve existing user additions!
+        function loadStorageData(key, fallbackData) {
+            const stored = localStorage.getItem(key);
+            if (stored === null) {
+                localStorage.setItem(key, JSON.stringify(fallbackData));
+                return fallbackData;
+            }
+            try {
+                return JSON.parse(stored);
+            } catch (err) {
+                console.error("Gagal parse localStorage untuk key:", key, err);
+                return fallbackData;
+            }
+        }
+
+        // Global State (Persisted)
+        let teachers = loadStorageData('dq_teachers', DEFAULT_GURU);
+        let violations = loadStorageData('dq_violations', DEFAULT_PELANGGARAN);
+        let authData = loadStorageData('dq_auth', { username: 'admin', password: 'admin123' });
+        let isLoggedIn = sessionStorage.getItem('dq_logged_in') === 'true';
+
+        // Helper to commit state change immediately to LocalStorage
+        function syncTeachers() {
+            localStorage.setItem('dq_teachers', JSON.stringify(teachers));
+        }
+
+        function syncViolations() {
+            localStorage.setItem('dq_violations', JSON.stringify(violations));
+        }
+
+        // Reset Database helper
+        function resetToDefaultData() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data ke data sampel bawaan? Data inputan Anda saat ini akan ditimpa!")) {
+                teachers = [...DEFAULT_GURU];
+                violations = [...DEFAULT_PELANGGARAN];
+                syncTeachers();
+                syncViolations();
+                renderGuruTable();
+                renderLaporanTable();
+                renderDashboard();
+                showToast("Database berhasil di-reset ke data sampel bawaan.", "info");
+            }
+        }
+
+        // --- AUTHENTICATION & LOGIN ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginUsername').value.trim();
+            const p = document.getElementById('loginPassword').value.trim();
+
+            if (u === authData.username && p === authData.password) {
+                sessionStorage.setItem('dq_logged_in', 'true');
+                isLoggedIn = true;
+                initApp();
+                showToast("Berhasil masuk ke Sistem Informasi Disiplin Guru DQ Al Mazaya", "success");
+            } else {
+                const alertEl = document.getElementById('loginAlert');
+                alertEl.classList.remove('hidden');
+                setTimeout(() => alertEl.classList.add('hidden'), 4000);
+            }
+        }
+
+        function handleLogout() {
+            // ONLY remove session state, NEVER touch teacher or violation data in localStorage!
+            sessionStorage.removeItem('dq_logged_in');
+            isLoggedIn = false;
+            initApp();
+            showToast("Anda telah keluar dari sistem.", "info");
+        }
+
+        function saveOperatorAccount(e) {
+            e.preventDefault();
+            const newU = document.getElementById('optUsername').value.trim();
+            const newP = document.getElementById('optPassword').value.trim();
+            const newPConf = document.getElementById('optPasswordConfirm').value.trim();
+
+            if (newP !== newPConf) {
+                showToast("Konfirmasi password tidak cocok!", "error");
+                return;
+            }
+
+            authData = { username: newU, password: newP };
+            localStorage.setItem('dq_auth', JSON.stringify(authData));
+            document.getElementById('sidebarUsername').innerText = newU;
+            showToast("Kredensial Operator berhasil diperbarui!", "success");
+            document.getElementById('optPassword').value = '';
+            document.getElementById('optPasswordConfirm').value = '';
+        }
+
+        // --- NAVIGATION & TABS ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-brand-800', 'text-white', 'font-semibold');
+                el.classList.add('text-brand-100');
+            });
+
+            document.getElementById(`tab-${tabName}-content`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-brand-800', 'text-white', 'font-semibold');
+            }
+
+            // Update Header Titles
+            const titles = {
+                dashboard: { title: "Dashboard Utama", sub: "Ringkasan kedisiplinan dan aktivitas guru DQ Al Mazaya" },
+                guru: { title: "Manajemen Data Guru", sub: "Kelola biodata, NIP, dan nomor kontak WhatsApp guru" },
+                pelanggaran: { title: "Input Pelanggaran Guru", sub: "Form pencatatan tindakan dan tingkat pelanggaran kedisiplinan" },
+                laporan: { title: "Rekap & Laporan Disiplin", sub: "Filter, ekspor data, dan aksi teguran langsung via WhatsApp" },
+                pengaturan: { title: "Pengaturan Operator", sub: "Kelola kredensial akun login dan cadangan database" }
+            };
+
+            document.getElementById('pageTitle').innerText = titles[tabName].title;
+            document.getElementById('pageSubtitle').innerText = titles[tabName].sub;
+
+            // Render specific components
+            if (tabName === 'dashboard') renderDashboard();
+            if (tabName === 'guru') renderGuruTable();
+            if (tabName === 'pelanggaran') populateGuruDropdown();
+            if (tabName === 'laporan') renderLaporanTable();
+            if (tabName === 'pengaturan') document.getElementById('optUsername').value = authData.username;
+        }
+
+        // --- TEACHERS MANAGEMENT (DATA GURU) ---
+        function saveGuru(e) {
+            e.preventDefault();
+            const editId = document.getElementById('guruEditId').value;
+            const nip = document.getElementById('guruNip').value.trim();
+            const nama = document.getElementById('guruNama').value.trim();
+            const bidang = document.getElementById('guruBidang').value.trim();
+            const wa = document.getElementById('guruWa').value.trim();
+
+            if (editId) {
+                // Update
+                const idx = teachers.findIndex(g => g.id === editId);
+                if (idx !== -1) {
+                    teachers[idx] = { id: editId, nip, nama, bidang, wa };
+                    showToast("Data Guru berhasil diperbarui!", "success");
+                }
+            } else {
+                // Create
+                const newGuru = {
+                    id: 'g_' + Date.now(),
+                    nip,
+                    nama,
+                    bidang,
+                    wa
+                };
+                teachers.push(newGuru);
+                showToast("Guru baru berhasil ditambahkan!", "success");
+            }
+
+            syncTeachers(); // Persist instantly
+            resetFormGuru();
+            renderGuruTable();
+        }
+
+        function editGuru(id) {
+            const g = teachers.find(item => item.id === id);
+            if (!g) return;
+
+            document.getElementById('guruEditId').value = g.id;
+            document.getElementById('guruNip').value = g.nip;
+            document.getElementById('guruNama').value = g.nama;
+            document.getElementById('guruBidang').value = g.bidang;
+            document.getElementById('guruWa').value = g.wa;
+
+            document.getElementById('formGuruTitle').innerHTML = `<i class="fa-solid fa-user-pen text-brand-600"></i> Edit Data Guru`;
+            document.getElementById('btnSaveGuru').innerHTML = `<i class="fa-solid fa-rotate"></i> Update Data Guru`;
+            document.getElementById('btnCancelGuru').classList.remove('hidden');
+        }
+
+        function deleteGuru(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus data guru ini?")) {
+                teachers = teachers.filter(g => g.id !== id);
+                syncTeachers(); // Persist instantly
+                renderGuruTable();
+                showToast("Data Guru telah dihapus.", "info");
+            }
+        }
+
+        function resetFormGuru() {
+            document.getElementById('guruEditId').value = '';
+            document.getElementById('formGuru').reset();
+            document.getElementById('formGuruTitle').innerHTML = `<i class="fa-solid fa-user-plus text-brand-600"></i> Tambah Data Guru`;
+            document.getElementById('btnSaveGuru').innerHTML = `<i class="fa-solid fa-save"></i> Simpan Data Guru`;
+            document.getElementById('btnCancelGuru').classList.add('hidden');
+        }
+
+        function renderGuruTable() {
+            const tbody = document.getElementById('tableGuruBody');
+            const searchInput = document.getElementById('searchGuruInput');
+            const keyword = searchInput ? searchInput.value.toLowerCase() : '';
+            
+            const filtered = teachers.filter(g => 
+                g.nama.toLowerCase().includes(keyword) || g.nip.toLowerCase().includes(keyword) || g.bidang.toLowerCase().includes(keyword)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-400">Tidak ada data guru ditemukan</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((g, idx) => `
+                <tr class="hover:bg-gray-50/80 transition">
+                    <td class="px-4 py-3 text-center text-xs font-semibold text-gray-500">${idx + 1}</td>
+                    <td class="px-4 py-3 font-mono text-xs text-gray-700">${g.nip}</td>
+                    <td class="px-4 py-3 font-semibold text-gray-800">${g.nama}</td>
+                    <td class="px-4 py-3 text-gray-600 text-xs">${g.bidang}</td>
+                    <td class="px-4 py-3 text-xs text-emerald-700 font-medium">
+                        <i class="fa-brands fa-whatsapp"></i> ${g.wa}
+                    </td>
+                    <td class="px-4 py-3 text-center space-x-1">
+                        <button onclick="editGuru('${g.id}')" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button onclick="deleteGuru('${g.id}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- VIOLATION RECORDING (PELANGGARAN) ---
+        function populateGuruDropdown() {
+            const select = document.getElementById('pelanggaranGuruId');
+            select.innerHTML = '<option value="">-- Pilih Guru --</option>' + 
+                teachers.map(g => `<option value="${g.id}">${g.nama} (${g.bidang})</option>`).join('');
+            
+            // Set default date to today
+            document.getElementById('pelanggaranTanggal').value = new Date().toISOString().split('T')[0];
+        }
+
+        function savePelanggaran(e) {
+            e.preventDefault();
+            const tanggal = document.getElementById('pelanggaranTanggal').value;
+            const guruId = document.getElementById('pelanggaranGuruId').value;
+            const tingkat = document.querySelector('input[name="tingkatPelanggaran"]:checked').value;
+            const jenis = document.getElementById('pelanggaranJenis').value.trim();
+            const tindakan = document.getElementById('pelanggaranTindakan').value.trim();
+
+            if (!guruId) {
+                showToast("Silakan pilih guru terlebih dahulu!", "error");
+                return;
+            }
+
+            const newRecord = {
+                id: 'p_' + Date.now(),
+                tanggal,
+                guruId,
+                tingkat,
+                jenis,
+                tindakan
+            };
+
+            violations.unshift(newRecord);
+            syncViolations(); // Persist instantly
+
+            showToast("Record pelanggaran berhasil disimpan!", "success");
+            document.getElementById('formPelanggaran').reset();
+            switchTab('laporan');
+        }
+
+        // --- DASHBOARD & STATS ---
+        function renderDashboard() {
+            document.getElementById('statTotalGuru').innerText = teachers.length;
+            document.getElementById('statTotalPelanggaran').innerText = violations.length;
+
+            const beratCount = violations.filter(v => v.tingkat === 'Berat').length;
+            document.getElementById('statPelanggaranBerat').innerText = beratCount;
+
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const monthCount = violations.filter(v => {
+                const d = new Date(v.tanggal);
+                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+            }).length;
+            document.getElementById('statBulanIni').innerText = monthCount;
+
+            // Render 5 recent violations
+            const tbody = document.getElementById('tableDashboardRecent');
+            const recent = violations.slice(0, 5);
+
+            if (recent.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-gray-400">Belum ada catatan pelanggaran</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = recent.map(v => {
+                const guru = teachers.find(g => g.id === v.guruId) || { nama: 'Guru (Telah Dihapus)', wa: '' };
+                const badgeClass = getBadgeClass(v.tingkat);
+
+                return `
+                    <tr class="hover:bg-gray-50 transition text-xs">
+                        <td class="px-5 py-3 whitespace-nowrap">${formatDateID(v.tanggal)}</td>
+                        <td class="px-5 py-3 font-semibold text-gray-800">${guru.nama}</td>
+                        <td class="px-5 py-3 max-w-xs truncate">${v.jenis}</td>
+                        <td class="px-5 py-3"><span class="${badgeClass}">${v.tingkat}</span></td>
+                        <td class="px-5 py-3 max-w-xs truncate">${v.tindakan}</td>
+                        <td class="px-5 py-3 text-center">
+                            ${guru.wa ? `<button onclick="sendWhatsAppNotice('${guru.id}', '${v.id}')" class="text-xs bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1 rounded-md transition inline-flex items-center gap-1 shadow-sm"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>` : '<span class="text-gray-400 text-[10px]">No WA</span>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- LAPORAN & REKAP ---
+        function renderLaporanTable() {
+            const tbody = document.getElementById('tableLaporanBody');
+            const filterTingkat = document.getElementById('filterTingkat').value;
+            const tglMulai = document.getElementById('filterTanggalMulai').value;
+            const tglSelesai = document.getElementById('filterTanggalSelesai').value;
+
+            let filtered = violations.filter(v => {
+                let matchTingkat = (filterTingkat === 'ALL') || (v.tingkat === filterTingkat);
+                let matchTanggal = true;
+
+                if (tglMulai && v.tanggal < tglMulai) matchTanggal = false;
+                if (tglSelesai && v.tanggal > tglSelesai) matchTanggal = false;
+
+                return matchTingkat && matchTanggal;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-gray-400">Tidak ada data pelanggaran yang sesuai filter</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((v, idx) => {
+                const guru = teachers.find(g => g.id === v.guruId) || { nama: 'Guru (Telah Dihapus)', bidang: '-', wa: '' };
+                const badgeClass = getBadgeClass(v.tingkat);
+
+                return `
+                    <tr class="hover:bg-gray-50/80 transition text-xs">
+                        <td class="px-4 py-3 text-center font-semibold text-gray-500">${idx + 1}</td>
+                        <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-700">${formatDateID(v.tanggal)}</td>
+                        <td class="px-4 py-3 font-semibold text-gray-800">${guru.nama}</td>
+                        <td class="px-4 py-3 text-gray-600">${guru.bidang}</td>
+                        <td class="px-4 py-3 text-gray-700 leading-relaxed">${v.jenis}</td>
+                        <td class="px-4 py-3"><span class="${badgeClass}">${v.tingkat}</span></td>
+                        <td class="px-4 py-3 text-gray-700 leading-relaxed">${v.tindakan}</td>
+                        <td class="px-4 py-3 text-center">
+                            ${guru.wa ? `<button onclick="sendWhatsAppNotice('${guru.id}', '${v.id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-2.5 py-1.5 rounded-lg transition inline-flex items-center gap-1.5 shadow-sm text-xs"><i class="fa-brands fa-whatsapp text-sm"></i> Notifikasi</button>` : '<span class="text-gray-400 text-[10px]">N/A</span>'}
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button onclick="deletePelanggaran('${v.id}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Record">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function deletePelanggaran(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus record pelanggaran ini?")) {
+                violations = violations.filter(v => v.id !== id);
+                syncViolations(); // Persist instantly
+                renderLaporanTable();
+                showToast("Record pelanggaran telah dihapus.", "info");
+            }
+        }
+
+        function resetLaporanFilter() {
+            document.getElementById('filterTingkat').value = 'ALL';
+            document.getElementById('filterTanggalMulai').value = '';
+            document.getElementById('filterTanggalSelesai').value = '';
+            renderLaporanTable();
+        }
+
+        // --- WHATSAPP INTEGRATION ---
+        function sendWhatsAppNotice(guruId, violationId) {
+            const guru = teachers.find(g => g.id === guruId);
+            const v = violations.find(item => item.id === violationId);
+            if (!guru || !v) return;
+
+            // Normalize phone number
+            let phone = guru.wa.replace(/[^0-9]/g, '');
+            if (phone.startsWith('0')) {
+                phone = '62' + phone.slice(1);
+            }
+
+            const message = `Assalamu'alaikum Wr. Wb. Yth. *${guru.nama}*\n\nBerikut disampaikan catatan kedisiplinan guru DQ Al Mazaya:\n` +
+                `- *Tanggal:* ${formatDateID(v.tanggal)}\n` +
+                `- *Tingkat Pelanggaran:* ${v.tingkat.toUpperCase()}\n` +
+                `- *Detail Pelanggaran:* ${v.jenis}\n` +
+                `- *Tindakan / Sanksi:* ${v.tindakan}\n\n` +
+                `Mohon untuk dapat dievaluasi dan diperhatikan bersama demi kelancaran kegiatan belajar mengajar di DQ Al Mazaya. Terima kasih.\n\n_Wassalamu'alaikum Wr. Wb._\n*Tim Kedisiplinan DQ Al Mazaya*`;
+
+            const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+        }
+
+        // --- EXPORT & BACKUP DATABASE ---
+        function exportGuruCSV() {
+            if (teachers.length === 0) {
+                showToast("Tidak ada data guru untuk diekspor!", "error");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,No,NIP,Nama Guru,Bidang Studi,No WA\n";
+            teachers.forEach((g, idx) => {
+                csvContent += `${idx + 1},"${g.nip}","${g.nama}","${g.bidang}","${g.wa}"\n`;
+            });
+
+            downloadFile(encodeURI(csvContent), `Data_Guru_DQ_Al_Mazaya_${getFormattedDateString()}.csv`);
+            showToast("Berhasil mendownload Data Guru (.CSV)", "success");
+        }
+
+        function exportPelanggaranCSV() {
+            if (violations.length === 0) {
+                showToast("Tidak ada data pelanggaran untuk diekspor!", "error");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,No,Tanggal,NIP,Nama Guru,Bidang Studi,Tingkat Pelanggaran,Jenis Pelanggaran,Tindakan Sanksi\n";
+            violations.forEach((v, idx) => {
+                const guru = teachers.find(g => g.id === v.guruId) || { nip: '-', nama: 'Guru Dihapus', bidang: '-' };
+                csvContent += `${idx + 1},"${v.tanggal}","${guru.nip}","${guru.nama}","${guru.bidang}","${v.tingkat}","${v.jenis.replace(/"/g, '""')}","${v.tindakan.replace(/"/g, '""')}"\n`;
+            });
+
+            downloadFile(encodeURI(csvContent), `Rekap_Pelanggaran_Disiplin_Guru_DQ_${getFormattedDateString()}.csv`);
+            showToast("Berhasil mendownload Rekap Pelanggaran (.CSV)", "success");
+        }
+
+        function exportAllDatabase() {
+            const dataObj = {
+                institution: "DQ Al Mazaya",
+                exportDate: new Date().toISOString(),
+                teachers: teachers,
+                violations: violations,
+                auth: { username: authData.username }
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataObj, null, 2));
+            downloadFile(dataStr, `BACKUP_DATABASE_DISIPLIN_DQ_${getFormattedDateString()}.json`);
+            showToast("Berhasil mengunduh file Cadangan Database JSON!", "success");
+        }
+
+        function importDatabaseJSON() {
+            const fileInput = document.getElementById('importJsonFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showToast("Pilih berkas JSON terlebih dahulu!", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.teachers && imported.violations) {
+                        teachers = imported.teachers;
+                        violations = imported.violations;
+                        syncTeachers();
+                        syncViolations();
+                        
+                        showToast("Database berhasil dipulihkan!", "success");
+                        fileInput.value = '';
+                        switchTab('dashboard');
+                    } else {
+                        showToast("Format file JSON tidak sesuai!", "error");
+                    }
+                } catch (err) {
+                    showToast("Gagal membaca file JSON!", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // --- HELPER UTILITIES ---
+        function getBadgeClass(tingkat) {
+            if (tingkat === 'Biasa') return 'bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full font-semibold text-[11px]';
+            if (tingkat === 'Sedang') return 'bg-amber-100 text-amber-700 px-2.5 py-0.5 rounded-full font-semibold text-[11px]';
+            if (tingkat === 'Berat') return 'bg-red-100 text-red-700 px-2.5 py-0.5 rounded-full font-semibold text-[11px]';
+            return 'bg-gray-100 text-gray-700 px-2.5 py-0.5 rounded-full font-semibold text-[11px]';
+        }
+
+        function formatDateID(dateStr) {
+            if (!dateStr) return '-';
+            const parts = dateStr.split('-');
+            if (parts.length !== 3) return dateStr;
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            return `${parts[2]} ${months[parseInt(parts[1]) - 1]} ${parts[0]}`;
+        }
+
+        function getFormattedDateString() {
+            const d = new Date();
+            return `${d.getFullYear()}_${d.getMonth()+1}_${d.getDate()}`;
+        }
+
+        function downloadFile(content, fileName) {
+            const link = document.createElement("a");
+            link.setAttribute("href", content);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const message = document.getElementById('toastMessage');
+
+            message.innerText = msg;
+
+            if (type === "success") {
+                toast.className = "mb-4 p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-md bg-emerald-50 text-emerald-800 border border-emerald-200";
+                icon.className = "fa-solid fa-circle-check text-emerald-600 text-lg";
+            } else if (type === "error") {
+                toast.className = "mb-4 p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-md bg-red-50 text-red-800 border border-red-200";
+                icon.className = "fa-solid fa-circle-exclamation text-red-600 text-lg";
+            } else {
+                toast.className = "mb-4 p-4 rounded-xl text-sm font-medium flex items-center justify-between shadow-md bg-blue-50 text-blue-800 border border-blue-200";
+                icon.className = "fa-solid fa-circle-info text-blue-600 text-lg";
+            }
+
+            toast.classList.remove('hidden');
+            setTimeout(() => hideToast(), 4000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.add('hidden');
+        }
+
+        // --- APP INITIALIZATION ---
+        function initApp() {
+            if (isLoggedIn) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainDashboard').classList.remove('hidden');
+                document.getElementById('sidebarUsername').innerText = authData.username;
+                switchTab('dashboard');
+            } else {
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('mainDashboard').classList.add('hidden');
+            }
+        }
+
+        // Run on load
+        window.onload = function() {
+            initApp();
+        };
+    </script>
+</body>
+</html>
